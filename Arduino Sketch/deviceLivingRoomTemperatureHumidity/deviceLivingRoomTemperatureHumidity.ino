@@ -39,9 +39,9 @@ int from;
 int to;
 int action;
 
-char message[30]; // hold return ms
+char message[24]; // hold return ms
 
-char payload[32]; // max is 32 bytes even with enableDynamicPayloads
+char payload[26]; // max is 32 bytes even with enableDynamicPayloads
 
 void setup(void)
 {
@@ -104,7 +104,7 @@ char *getTempHum(int action, char* message){
     t = 0.00;
     tf = 0.00;
     
-    sprintf(message, "\"error\":\"%s\"", "Failed read DHT");
+    sprintf(message, "error:%s", "failed read dht");
     
   }else {
     Serial.print("Humidity: "); 
@@ -126,13 +126,13 @@ char *getTempHum(int action, char* message){
     
     // build message
     if(ACTIONTEMP == action){ // temperature
-      sprintf(message, "\"t\":\"%s\"", temp);
+      sprintf(message, "t:%s", temp);
     }
     if(ACTIONHUM == action){ // humidity
-      sprintf(message, "\"h\":\"%s\"", hum);
+      sprintf(message, "h:%s", hum);
     } 
     if(ACTIONTEMPHUM == action){ // temperature and humidity
-      sprintf(message, "\"t\":\"%s\",\"h\":\"%s\"", temp, hum);
+      sprintf(message, "t:%s,h:%s", temp, hum);
     }  
     
     Serial.println("");
@@ -164,7 +164,7 @@ void loop(void)
     from = 0;
     to = 0;
     action = 0;
-    sscanf((char *)receive_payload, "{\"fr\":\"%d\",\"to\":\"%d\",\"ac\":\"%d\"}", &from, &to, &action);
+    sscanf((char *)receive_payload, "fr:%d,to:%d,ac:%d", &from, &to, &action);
     
     Serial.print("From: ");
     Serial.print(from);
@@ -182,7 +182,7 @@ void loop(void)
         getTempHum(action, message);
         
       }else {
-        sprintf(message, "\"error\":\"action not exists\"");
+        sprintf(message, "error:action not exists");
       }
       
       Serial.println("");
@@ -190,7 +190,7 @@ void loop(void)
       Serial.println(message);
       
       memset(payload, 0, sizeof(payload)); // clear it
-      sprintf(payload, "{%s}\0", message);
+      sprintf(payload, "%s\0", message);
       
       // First, stop listening so we can talk
       radio.stopListening();
