@@ -60,7 +60,7 @@ void setup(void)
   // optionally, increase the delay between retries & # of retries
   radio.setRetries(5,15);
   
-  radio.setPALevel(RF24_PA_HIGH);
+  radio.setPALevel(RF24_PA_MAX);
   radio.setDataRate(RF24_250KBPS);
   radio.setChannel(114);
 
@@ -126,13 +126,13 @@ char *getTempHum(int action, char* message){
     
     // build message
     if(ACTIONTEMP == action){ // temperature
-      sprintf(message, "t:%s", temp);
+      sprintf(message, "temp:%s", temp);
     }
     if(ACTIONHUM == action){ // humidity
-      sprintf(message, "h:%s", hum);
+      sprintf(message, "hum:%s", hum);
     } 
     if(ACTIONTEMPHUM == action){ // temperature and humidity
-      sprintf(message, "t:%s,h:%s", temp, hum);
+      sprintf(message, "temp:%s,hum:%s", temp, hum);
     }  
     
     Serial.println("");
